@@ -1,21 +1,61 @@
 ---
 title: "Simple document"
-output: html_document
+output: github_document
 ---
 
-I'm an R Markdown document! 
-
-# Section 1
-
-Here's a **code chunk** that samples from 
-a _normal distribution_:
-
-```{r}
-samp = rnorm(100)
-length(samp)
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
 ```
 
-# Section 2
+## Import some data
 
-I can take the mean of the sample, too!
-The mean is `r mean(samp)`.
+I want to import "FAS_litters.csv". (tell R where the data is)
+
+```{r}
+litters_df = read_csv("data/FAS_litters.csv")
+#This is relative path, below is absolute path, starting from very beginning
+```
+
+```{r}
+read_csv("/Users/kexu/Desktop/data_wrangling/data/FAS_litters.csv")
+#absolute path, only work in this computer
+```
+
+I imported this data set. Now I want better names.
+
+```{r}
+names(litters_df)
+
+litters_df = janitor::clean_names(litters_df)
+#clean up names, no space in names like Growth Year => Growth_Year
+
+#janitor is a pacakge, but I only need cleean_names in this pacakge, so I do not need to library it, just type the code above
+```
+
+I have netter names now. Let's look at data set.
+
+```{r}
+litters_df
+
+head(litters_df, 20)
+tail(litters_df, 20)
+#see first / last 20 rows
+```
+
+```{r, eval=FALSE}
+view(litters_df)
+# view here means you can open your data in a new window
+```
+
+Here is 'skimr':
+```{r}
+skimr::skim(litters_df)
+# like a summary table for your data
+```
+
+
+
+
+
+
+
