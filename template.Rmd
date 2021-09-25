@@ -53,8 +53,34 @@ skimr::skim(litters_df)
 # like a summary table for your data
 ```
 
+## Arguments in `read_csv`
+
+```{r}
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    skip = 5, #skip first 5 rows
+    colnames = FALSE, #skip first 5 rows and the 1st row is no longer column names in new data set
+    na = "Low8") #delete the name of variables whose names is Low8
+```
 
 
+## Parsing columns
+
+```{r}
+litters_data = read_csv(file = "./data/FAS_litters.csv", #. means starting from here
+  col_types = cols( # set and unique column type
+    Group = col_character(),
+    `Litter Number` = col_character(),
+    `GD0 weight` = col_double(),
+    `GD18 weight` = col_double(),
+    `GD of Birth` = col_integer(),
+    `Pups born alive` = col_integer(),
+    `Pups dead @ birth` = col_integer(),
+    `Pups survive` = col_integer()
+  )
+)
+```
 
 
 
