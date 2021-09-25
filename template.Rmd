@@ -104,3 +104,21 @@ fellow_df = read_excel("data/LotR_Words.xlsx", range = "B3:D6")
 pulse_df = read_sas("data/public_pulse_data.sas7bdat")
 ```
 
+
+## Why not use `read.csv`
+
+read.csv only show data frame rather than a table, compared to reac_csv, table looks more nice, moreover, `read.csv`doesn't give `tibble`
+
+## EXport data
+
+There is a good way
+```{r}
+write_csv(fellow_df, "data/fellowship_words.csv")
+# I write fellow_df as a csv file called fellowship_words in data
+```
+
+
+
+
+
+
