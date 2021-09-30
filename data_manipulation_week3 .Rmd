@@ -1,0 +1,164 @@
+---
+title: "data_manipulation"
+author: "ke"
+date: "9/30/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+I want to import `FAS_litters.csv`
+```{r, eval = FALSE}
+litters_df = read_csv("data/FAS_litters.csv")
+litters_df = janitor::clean_names(litters_df)
+
+pups_df = read_csv("data/FAS_pups.csv")
+pups_df = janitor::clean_names(pups_df)
+```
+
+
+## `Select`
+
+Let's select some columns
+```{r}
+select(litters_df, group, litter_number)
+# Select 'group' and 'litter_number' vectors
+
+select(litters_df, group, gd0_weight:gd_of_birth)
+# Sekect 'group' vector, and all vectors that between 'gd0_weight' and 'gd_of_birth'
+
+select(litters_df, group, starts_with("pups"))
+# Select all vectors that the name is start with 'pups'
+
+select(litters_df, group, ends_with("pups"))
+select(litters_df, group, contains_with("pups"))
+# Same as starts_with
+
+select(litters_df, -litter_number)
+# Keep everything but remove one column 'litter_number'
+
+select(litters_df, GROUP = group, litter_number)
+# Rename variables 'group' and keep the vector 'litter_number' and 'group'
+
+rename(litters_df, GROUP = group)
+# This is just rename, NOT select/keep that vector
+
+select(litters_df, litter_number, everything())
+relocate(litters_df, litter_number)
+# Both two are locate 'litter_number', and keep all vectors after 'litter_number'
+
+select(litters_df, group)
+pull(litters_df,group)
+# (Why pull rather than $)Pull fenction will follow all the logic and include what things the data frame have
+
+```
+
+
+## `Filter`
+
+Let's get rid of rows...
+```{r}
+filter(litters_df, gd_of_birth == 20)
+# Keep all rows that satisfy 'gd_of_birth' == 20
+filter(litters_df, group == "Con7")
+filter(litters_df, gd0_weight <= 23)
+
+# '=' means put this thing into ...; '==' means equal
+
+filter(litters_df, pups_alive != 4)
+# Not equal to 4
+filter(litters_df, !(group == "Con7"))
+# Keep all the rows that 'group' NOT equal to 'Con7' 
+
+filter(litters_df, group %in% c("Con7", "Con8"))
+# Keep variables that 'group' in 'Con7' or in 'Con8'
+
+filter(litters_df, group == "Con7", gd_of_birth == 20)
+# 同时满足这两个
+# 逻辑符号 and: , &; or: |
+
+drop_na(litters_df)
+# Drop all n.a. values in 'litters_df'
+drop_na(litters_df, gd0_weight)
+# Only drop n.a. values in 'gd0_weight' column
+
+```
+
+
+## `Mutate`
+
+Let's add or change columns
+
+```{r}
+mutate(litters_df, weight_change = gd18_weight - gd0_weight)
+# Create a new variable 'weight_change', which equal to (gd18_weight - gd0_weight)
+
+mutate(litters_df, 
+       weight_change = gd18_weight - gd0_weight,
+       group = str_to_lower(group))
+# multiple changes, change letters in group into small letters
+
+```
+
+
+## `Arrange`
+
+Let's rearrange the data
+
+```{r}
+arrange(litters_df, gd0_weight)
+# arrange 'gd0_weight' value from smallest to largest
+
+arrange(litters_df, desc(gd0_weight))
+# 倒序,in decending order
+
+arrange(litters_df, gd_of_birth, gd0_weight)
+# 先以'gd_of_birth'排序，然后在排序里，再以'gd0_weight'排序
+```
+
+
+## Pipes
+
+```{r}
+
+litters_data_row = read_csv("data/FAS_litters.csv")
+litters_clean_name = janitor::clean_names(litters_data_row)
+litters_select = select(litters_clean_name, group, pups_survive)
+litters_filtered = filter(litters_select, group == "Con7")
+# Make the code readable ->
+
+litters_df = 
+  read_csv("data/FAS_litters.csv")%>%
+  janitor::clean_names()%>% # Nothinig in (), so janitor will do things to a object coming from previous line
+  select(group, pups_survive)%>% # 同上,但是后面选择的两个 variables 要有
+  filter(group == "Con7")
+
+
+# Another example
+read_csv("data/FAS_litters.csv")%>%
+  janitor::clean_names()%>%
+  select(-pups_survive)%>%
+  mutate(
+    weight_change = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
+  )%>%
+  drop_na(weight_change)%>%
+  filter(group%in% c("Con7", "Con8"))%>%
+  select(litter_number, group, weight_change, everything())
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
