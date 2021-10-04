@@ -1,0 +1,52 @@
+---
+title: "Tidy data"
+author: "ke"
+date: "10/3/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+
+## pivot longer
+
+Load the PULSE data.
+
+```{r}
+pulse_df = 
+  read_sas("data//public_pulse_data.sas7bdat")%>%
+  janitor::clean_names()
+```
+
+Let's try to pivot
+
+```{r}
+pulse_tidy = 
+  pulse_df %>%
+  pivot_longer(            # ?pivot_longer
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit",
+    names_prefix = "bdi_score_",  #data frame中省略variable名字中"bdi_score_"这一部分
+    values_to = "bdi"
+  ) %>%
+  mutate(
+    visit = replace(visit, visit == "bl", "00m"), 
+    #In this "visit" column, any elements that called "bl" are changed to "00m"
+    visit = factor(visit) #convert "visit" into factor
+  )
+```
+
+## pivot_wider
+
+make up aa results data table
+
+```{r}
+
+```
+
+
+
+
