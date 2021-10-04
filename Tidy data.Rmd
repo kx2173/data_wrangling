@@ -24,6 +24,8 @@ pulse_df =
 Let's try to pivot
 
 ```{r}
+# make data table computer readable
+
 pulse_tidy = 
   pulse_df %>%
   pivot_longer(            # ?pivot_longer
@@ -44,7 +46,21 @@ pulse_tidy =
 make up aa results data table
 
 ```{r}
+# make data table human readable
 
+analysis_df = 
+  tibble(
+    group = c("treatment", "treatment", "control", "control"),
+    time = c("a", "b", "a", "b"),
+    group_mean = c(4, 8, 3, 6)
+  )
+
+analysis_df %>%
+  pivot_wider(
+    names_from = "time",
+    values_from = "group_mean"
+  )
+knitr::kable() # make r_markdown realize it is a table, output a table format
 ```
 
 
